@@ -1,0 +1,45 @@
+﻿@model CinemaHomeViewModel
+@{
+    ViewData["Title"] = "Discover the Movies";
+}
+
+<section class="cinema-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-copy">
+        <span class="eyebrow"><span class="live-dot"></span> YOUR CINEMA DESTINATION</span>
+        <h1>Stories worth<br /><em>experiencing.</em></h1>
+        <p>Discover the latest movies, find your next favorite, and make movie night special.</p>
+        <a class="button button-gold" asp-area="Customer" asp-controller="Movies" asp-action="Index">Explore Movies <span>↗</span></a>
+    </div>
+    <div class="hero-stamp"><span>YOUR NEXT<br />MOVIE NIGHT</span><b>✦</b></div>
+    <div class="hero-bottom"><span>01 / YOUR CINEMA STARTS HERE</span><span>SCROLL TO EXPLORE ↓</span></div>
+</section>
+
+<section class="content-section" id="movies">
+    <div class="section-heading">
+        <div><span class="eyebrow">HANDPICKED FOR YOU</span><h2>Movies Worth Watching</h2></div>
+        <a class="text-link" asp-area="Customer" asp-controller="Movies" asp-action="Index">View All Movies <span>↗</span></a>
+    </div>
+    @if (Model.Movies.Count == 0)
+    {
+        <div class="empty-state"><span>✦</span><h3>No movies are showing yet</h3><p>Movies will appear here as soon as they are added to the cinema.</p></div>
+    }
+    else
+    {
+        <div class="movie-grid">
+        @foreach (var movie in Model.Movies)
+        {
+               <partial name="_MovieCard" model="movie" />        }
+        </div>
+    }
+</section>
+
+<section class="category-strip">
+    <span class="eyebrow">PICK YOUR MOOD</span><h2>Every Kind of Story</h2>
+    <div class="category-list">
+    @foreach (var category in Model.Categories)
+    {
+        <a asp-area="Customer" asp-controller="Movies" asp-action="Index" asp-route-categoryId="@category.Id">@category.Name <span>↗</span></a>
+    }
+    </div>
+</section>

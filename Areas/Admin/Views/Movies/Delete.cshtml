@@ -1,0 +1,140 @@
+﻿@model IEnumerable<CinemaProject.Models.Movie>
+
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Movies</h2>
+
+        <a asp-action="Create" class="btn btn-primary">
+            Add New Movie
+        </a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Poster</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Release Date</th>
+                        <th>Category</th>
+                        <th>Cinema</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.MainImg))
+                                {
+                                    <img src="@item.MainImg"
+                                         alt="@item.Name"
+                                         style="width:80px;height:100px;object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <span>No Image</span>
+                                }
+                            </td>
+
+                            <td>@item.Name</td>
+
+                            <td>
+                                @(string.IsNullOrEmpty(item.Description)
+                                    ? "No Description"
+                                    : item.Description)
+                            </td>
+
+                            <td>@item.Price</td>
+
+                            <td>@item.ReleaseDate.ToShortDateString()</td>
+
+                            <td>@item.Category?.Name</td>
+
+                            <td>@item.Cinema?.Name</td>
+
+                            <td>
+                                @if (item.Status)
+                                {
+                                    <span class="badge bg-success">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Unavailable</span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@item.Id"
+                                          method="post"
+                                          class="delete-form">
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm delete-btn">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No movies found. Click "Add New Movie" to add your first movie.
+        </div>
+    }
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+            const form = this.closest(".delete-form");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+
+        });
+    });
+</script>

@@ -1,0 +1,39 @@
+﻿@model MovieListViewModel
+@{
+    ViewData["Title"] = "Movies";
+}
+
+<section class="page-banner">
+    <span class="eyebrow">FIND YOUR NEXT MOVIE</span>
+    <h1>The Movie <em>Guide</em></h1>
+    <p>Your next great story is waiting.</p>
+</section>
+
+<section class="content-section movie-catalog">
+    <form method="get" asp-area="Customer" asp-controller="Movies" asp-action="Index" class="catalog-tools">
+        <label class="search-box"><span>⌕</span><input type="search" name="search" value="@Model.Search" placeholder="Search movies..." aria-label="Search movies" /></label>
+        <label class="filter-select"><span class="sr-only">Category</span>
+            <select name="categoryId" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var category in Model.Categories)
+                {
+                    <option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Name</option>
+                }
+            </select>
+        </label>
+        <button class="button button-outline" type="submit">Search <span>↗</span></button>
+    </form>
+    @if (Model.Movies.Count == 0)
+    {
+        <div class="empty-state"><span>⌕</span><h3>No movies found</h3><p>Try another title or category.</p></div>
+    }
+    else
+    {
+        <div class="movie-grid">
+        @foreach (var movie in Model.Movies)
+        {
+            <partial name="_MovieCard" model="movie" />
+        }
+        </div>
+    }
+</section>

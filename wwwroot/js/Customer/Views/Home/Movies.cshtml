@@ -1,0 +1,35 @@
+@{ ViewData["Title"] = "Movies"; }
+<section class="page-hero section-wrap reveal"><div class="eyebrow"><span class="eyebrow-line"></span> THE MOVIE COLLECTION</div><h1>Find your next <em>obsession.</em></h1><p>Big adventures, small moments, unforgettable stories.</p><div class="movie-filters"><label class="search-box"><span>⌕</span><input id="movieSearch" type="search" placeholder="Search movies or genres..." aria-label="Search movies" /></label><select id="genreFilter" class="form-control filter-select" aria-label="Filter by genre"><option value="">All genres</option><option value="sci-fi">Sci-Fi</option><option value="thriller">Thriller</option><option value="drama">Drama</option><option value="mystery">Mystery</option><option value="action">Action</option><option value="adventure">Adventure</option><option value="romance">Romance</option></select><select id="sortMovies" class="form-control filter-select" aria-label="Sort movies"><option value="default">Featured</option><option value="title">Title A–Z</option><option value="rating-desc">Rating: high to low</option><option value="rating-asc">Rating: low to high</option></select></div></section>
+<section class="section-wrap section-block"><div class="movies-results-row"><span id="movieCount" aria-live="polite">4 movies found</span><button type="button" id="clearFilters" class="text-link">Clear filters ↺</button></div><div class="movie-grid" id="movieGrid">
+<article class="movie-card reveal" data-search="midnight signal sci-fi thriller"><a class="movie-poster" asp-action="Details" asp-route-id="1"><img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=85" alt="Midnight Signal"/><span class="poster-tag">SCI-FI</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>Midnight Signal</h3><p>Sci-Fi · Thriller</p></div><span class="rating">★ 8.9</span></div></article>
+<article class="movie-card reveal" data-search="the last frame drama mystery"><a class="movie-poster" asp-action="Details" asp-route-id="2"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=85" alt="The Last Frame"/><span class="poster-tag">DRAMA</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>The Last Frame</h3><p>Drama · Mystery</p></div><span class="rating">★ 9.1</span></div></article>
+<article class="movie-card reveal" data-search="neon horizon action adventure"><a class="movie-poster" asp-action="Details" asp-route-id="3"><img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=85" alt="Neon Horizon"/><span class="poster-tag">ACTION</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>Neon Horizon</h3><p>Action · Adventure</p></div><span class="rating">★ 8.7</span></div></article>
+<article class="movie-card reveal" data-search="after the rain romance drama"><a class="movie-poster" asp-action="Details" asp-route-id="4"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=85" alt="After The Rain"/><span class="poster-tag">ROMANCE</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>After The Rain</h3><p>Romance · Drama</p></div><span class="rating">★ 8.5</span></div></article>
+</div><p id="emptySearch" class="empty-state" hidden>No movies found. Try changing your search or filters.</p><nav class="pagination" id="moviePagination" aria-label="Movie pages"></nav></section>
+<style>
+.movie-filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}.movie-filters .search-box{margin-top:0;flex:1;min-width:240px;max-width:420px}.filter-select{width:auto;min-width:140px;padding:13px 12px;font-size:11px}.movies-results-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;color:var(--muted);font-size:11px}.movies-results-row button{background:none;border:0;cursor:pointer}.pagination{display:flex;justify-content:center;gap:8px;margin-top:38px;flex-wrap:wrap}.pagination button{min-width:38px;height:38px;border:1px solid var(--line);border-radius:4px;background:#10131d;color:var(--text);cursor:pointer}.pagination button:hover,.pagination button.active{background:var(--accent);border-color:var(--accent);color:#10140a}.pagination button:disabled{opacity:.35;cursor:not-allowed}@@media(max-width:760px){.movie-filters .search-box{max-width:none;flex-basis:100%}.filter-select{flex:1;min-width:100px}}
+</style>
+@section Scripts {
+<script>
+(() => {
+ const grid=document.getElementById('movieGrid'); if(!grid)return;
+ const cards=Array.from(grid.querySelectorAll('.movie-card'));
+ const search=document.getElementById('movieSearch'), genre=document.getElementById('genreFilter'), sort=document.getElementById('sortMovies');
+ const count=document.getElementById('movieCount'), empty=document.getElementById('emptySearch'), pager=document.getElementById('moviePagination');
+ const pageSize=8; let page=1;
+ function render(){
+  const q=search.value.trim().toLowerCase(), g=genre.value.toLowerCase();
+  let list=cards.filter(c=>(c.dataset.search||'').includes(q)&&(!g||(c.dataset.search||'').split(/\s+/).includes(g)));
+  if(sort.value==='title')list.sort((a,b)=>a.querySelector('h3').textContent.localeCompare(b.querySelector('h3').textContent));
+  if(sort.value==='rating-desc')list.sort((a,b)=>Number(b.querySelector('.rating').textContent.replace(/[^0-9.]/g,''))-Number(a.querySelector('.rating').textContent.replace(/[^0-9.]/g,'')));
+  if(sort.value==='rating-asc')list.sort((a,b)=>Number(a.querySelector('.rating').textContent.replace(/[^0-9.]/g,''))-Number(b.querySelector('.rating').textContent.replace(/[^0-9.]/g,'')));
+  const pages=Math.max(1,Math.ceil(list.length/pageSize));page=Math.min(page,pages);cards.forEach(c=>c.hidden=true);list.forEach((c,i)=>{grid.appendChild(c);c.hidden=i<(page-1)*pageSize||i>=page*pageSize});
+  count.textContent=`${list.length} movie${list.length===1?'':'s'} found`;empty.hidden=list.length>0;pager.replaceChildren();
+  const btn=(label,target,disabled,active=false)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.disabled=disabled;if(active)b.className='active';b.onclick=()=>{page=target;render()};pager.appendChild(b)};
+  btn('‹',Math.max(1,page-1),page===1);for(let i=1;i<=pages;i++)btn(String(i),i,false,i===page);btn('›',Math.min(pages,page+1),page===pages);
+ }
+ search.addEventListener('input',()=>{page=1;render()});genre.addEventListener('change',()=>{page=1;render()});sort.addEventListener('change',()=>{page=1;render()});
+ document.getElementById('clearFilters').addEventListener('click',()=>{search.value='';genre.value='';sort.value='default';page=1;render()});render();
+})();
+</script>
+}

@@ -1,0 +1,28 @@
+﻿@model MovieDetailsViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<article class="movie-detail">
+    <div class="detail-backdrop" style="--movie-image: url('@(string.IsNullOrWhiteSpace(Model.MainImg) ? "/images/movie-placeholder.jpg" : Model.MainImg)')"></div>
+    <div class="detail-layout">
+        <div class="detail-poster"><img src="@(string.IsNullOrWhiteSpace(Model.MainImg) ? "/images/movie-placeholder.jpg" : Model.MainImg)" alt="@Model.Name movie poster" /></div>
+        <div class="detail-copy">
+            <a class="back-link" asp-area="Customer" asp-controller="Movies" asp-action="Index">← Back to Movies</a>
+            <span class="eyebrow">@Model.CategoryName <span class="separator">•</span> @Model.ReleaseDate.ToString("yyyy")</span>
+            <h1>@Model.Name</h1>
+            <div class="detail-meta"><span>📍 @Model.CinemaName</span><span>◷ @Model.ReleaseDate.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span></div>
+            @if (!string.IsNullOrWhiteSpace(Model.Description)) { <p class="detail-description">@Model.Description</p> }
+            <div class="price-row"><div><small>Ticket price</small><strong>@Model.Price.ToString("0.00") <small>EGP</small></strong></div><a class="button button-gold" href="#cinema-info">Cinema Details <span>↗</span></a></div>
+            @if (Model.Actors.Count > 0)
+            {
+                <div class="detail-block"><h2>Cast</h2><div class="actor-list">@foreach (var actor in Model.Actors) { <span>@actor</span> }</div></div>
+            }
+        </div>
+    </div>
+    @if (Model.Images.Count > 0)
+    {
+        <section class="gallery content-section"><div class="section-heading"><div><span class="eyebrow">INSIDE THE MOVIE</span><h2>Gallery</h2></div></div><div class="gallery-grid">@foreach (var image in Model.Images) { <img src="@image" alt="A scene from @Model.Name" loading="lazy" /> }</div></section>
+    }
+    <section class="cinema-info content-section" id="cinema-info"><span class="eyebrow">SEE IT ON THE BIG SCREEN</span><h2>@Model.CinemaName</h2><p>@(Model.CinemaAddress ?? "Address details are currently unavailable.")</p></section>
+</article>

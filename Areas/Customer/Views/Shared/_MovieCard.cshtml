@@ -1,0 +1,10 @@
+﻿@model MovieCardViewModel
+<article class="movie-card">
+    <a class="poster-link" asp-area="Customer" asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id" aria-label="View details for @Model.Name">
+        <img src="@(string.IsNullOrWhiteSpace(Model.MainImg) ? "/images/movie-placeholder.jpg" : Model.MainImg)" alt="@Model.Name movie poster" loading="lazy" />
+        <span class="poster-shade"></span><span class="poster-arrow">↗</span>
+        <span class="poster-category">@Model.CategoryName</span>
+    </a>
+    <div class="movie-card-info"><div><span class="cinema-name">@Model.CinemaName</span><h3><a asp-area="Customer" asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a></h3></div><span class="movie-price">@Model.Price.ToString("0") <small>EGP</small></span></div>
+    <div class="movie-card-foot"><span>From @Model.ReleaseDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span><a asp-area="Customer" asp-controller="Movies" asp-action="Details" asp-route-id="@Model.Id">Details →</a></div>
+</article>

@@ -1,0 +1,26 @@
+@{ ViewData["Title"] = "Discover the magic"; }
+<section class="hero section-wrap">
+    <div class="hero-copy reveal">
+        <div class="eyebrow"><span class="eyebrow-line"></span> THE CINEMA EXPERIENCE, REIMAGINED</div>
+        <h1>Stories hit<br />different on the <em>big screen.</em></h1>
+        <p class="hero-text">Lose yourself in another world. Discover the movies everyone's talking about and make tonight unforgettable.</p>
+        <div class="hero-actions"><a class="btn btn-primary" asp-action="Movies">Explore movies <span>↗</span></a><a class="text-link" asp-action="Cinemas"><span class="play-icon">▶</span> Find a cinema</a></div>
+        <div class="hero-stats"><div><strong>4.9<span>★</span></strong><small>Audience rating</small></div><div><strong>12<span>k+</span></strong><small>Happy moviegoers</small></div><div><strong>24<span>/7</span></strong><small>Movie magic</small></div></div>
+    </div>
+    <div class="hero-art reveal reveal-delay">
+        <div class="hero-orbit orbit-a"></div><div class="hero-orbit orbit-b"></div>
+        <div class="hero-poster"><img src="https://images.unsplash.com/photo-1489599849927-2ee91adde7a5?auto=format&fit=crop&w=900&q=85" alt="Cinema seats" /><div class="poster-shade"></div><div class="poster-label"><span>NOW SHOWING</span><strong>The magic<br />starts here.</strong></div></div>
+        <div class="floating-chip chip-top"><span class="chip-dot"></span> New releases <b>04</b></div><div class="floating-chip chip-bottom"><span class="star">★</span><div><b>Premium experience</b><small>Made for movie lovers</small></div></div>
+        <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✦</span>
+    </div>
+</section>
+<section class="section-wrap section-block">
+    <div class="section-heading reveal"><div><div class="eyebrow"><span class="eyebrow-line"></span> HANDPICKED FOR YOU</div><h2>In the <em>spotlight.</em></h2></div><a class="text-link" asp-action="Movies">View all movies <span>↗</span></a></div>
+    <div class="movie-grid">
+        <article class="movie-card reveal"><a class="movie-poster" asp-action="Details" asp-route-id="1"><img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=85" alt="Midnight Signal poster" /><span class="poster-tag">SCI-FI</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>Midnight Signal</h3><p>Sci-Fi · Thriller</p></div><span class="rating">★ 8.9</span></div></article>
+        <article class="movie-card reveal"><a class="movie-poster" asp-action="Details" asp-route-id="2"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=85" alt="The Last Frame poster" /><span class="poster-tag">DRAMA</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>The Last Frame</h3><p>Drama · Mystery</p></div><span class="rating">★ 9.1</span></div></article>
+        <article class="movie-card reveal"><a class="movie-poster" asp-action="Details" asp-route-id="3"><img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=85" alt="Neon Horizon poster" /><span class="poster-tag">ACTION</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>Neon Horizon</h3><p>Action · Adventure</p></div><span class="rating">★ 8.7</span></div></article>
+        <article class="movie-card reveal"><a class="movie-poster" asp-action="Details" asp-route-id="4"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=85" alt="After The Rain poster" /><span class="poster-tag">ROMANCE</span><span class="poster-arrow">↗</span></a><div class="movie-meta"><div><h3>After The Rain</h3><p>Romance · Drama</p></div><span class="rating">★ 8.5</span></div></article>
+    </div>
+</section>
+<section class="experience-band section-wrap reveal"><div class="experience-icon">✦</div><div><div class="eyebrow">MORE THAN A MOVIE</div><h2>Make room for <em>the moment.</em></h2><p>Immersive screens, incredible sound, and seats you'll never want to leave.</p></div><a class="btn btn-light" asp-action="Cinemas">Find your cinema <span>↗</span></a></section>

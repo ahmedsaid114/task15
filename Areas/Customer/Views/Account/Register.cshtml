@@ -1,0 +1,89 @@
+@model RegisterInputModel
+@{
+    ViewData["Title"] = "Create account";
+}
+
+<section class="auth-page auth-register">
+    <div class="auth-orbit auth-orbit-one"></div>
+    <div class="auth-orbit auth-orbit-two"></div>
+    <div class="auth-shell">
+        <aside class="auth-story">
+            <a class="auth-back" asp-area="Customer" asp-controller="Home" asp-action="Index"><span>←</span> Back to CineVerse</a>
+            <div class="auth-story-copy">
+                <span class="eyebrow"><span class="live-dot"></span> YOUR CINEMA CLUB</span>
+                <h1>Make room for <em>more stories.</em></h1>
+                <p>Your next favorite film is out there. Join CineVerse and keep every great movie night in one place.</p>
+                <div class="auth-perks">
+                    <span><b>✦</b> Build a list of films to watch</span>
+                    <span><b>✦</b> Explore the latest releases</span>
+                </div>
+            </div>
+            <div class="auth-film-note"><span>YOUR STORY STARTS HERE</span><strong>TAKE YOUR SEAT</strong><i>✦ &nbsp; ✦ &nbsp; ✦</i></div>
+        </aside>
+
+        <section class="auth-card" aria-labelledby="auth-title">
+            <div class="auth-card-mark">✦</div>
+            <span class="auth-kicker">JOIN CINEVERSE</span>
+            <h2>Find your people.</h2>
+            <p class="auth-subtitle">Create an account for your next movie night.</p>
+
+            <form class="auth-form" asp-action="Register" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+                <label asp-for="Name">Your name</label>
+                <div class="auth-input-wrap"><span aria-hidden="true">✧</span><input asp-for="Name" placeholder="Alex Morgan" autocomplete="name" /></div>
+                <span asp-validation-for="Name" class="auth-validation"></span>
+
+                <label asp-for="Email">Email address</label>
+                <div class="auth-input-wrap"><span aria-hidden="true">✉</span><input asp-for="Email" type="email" placeholder="you@example.com" autocomplete="email" /></div>
+                <span asp-validation-for="Email" class="auth-validation"></span>
+
+                <label asp-for="Password">Create a password</label>
+                <div class="auth-input-wrap"><span aria-hidden="true">⌑</span><input asp-for="Password" type="password" placeholder="At least 8 characters" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="Password" aria-label="Show password">Show</button></div>
+                <span asp-validation-for="Password" class="auth-validation"></span>
+
+                <label asp-for="ConfirmPassword">Confirm password</label>
+                <div class="auth-input-wrap"><span aria-hidden="true">⌑</span><input asp-for="ConfirmPassword" type="password" placeholder="Type your password again" autocomplete="new-password" /><button class="password-toggle" type="button" data-password-toggle="ConfirmPassword" aria-label="Show password">Show</button></div>
+                <span asp-validation-for="ConfirmPassword" class="auth-validation"></span>
+
+                <label for="profileImage">Profile photo <small>(optional)</small></label>
+                <div class="auth-upload-wrap">
+                    <div class="auth-avatar-preview" id="profile-preview-wrap"><span id="profile-placeholder">✦</span><img id="profile-preview" alt="Profile photo preview" hidden /></div>
+                    <label class="auth-upload-button" for="profileImage">Choose photo</label>
+                    <input id="profileImage" name="profileImage" type="file" accept="image/jpeg,image/png,image/webp" />
+                    <span class="auth-upload-hint">JPG, PNG or WEBP · up to 3 MB</span>
+                </div>
+
+                <p class="auth-privacy-note">Your details are used only to manage your CineVerse account.</p>
+                <button class="auth-submit" type="submit">Create account <span>↗</span></button>
+            </form>
+
+            <p class="auth-switch">Already part of the club? <a asp-area="Customer" asp-controller="Account" asp-action="Login">Sign in</a></p>
+            <div class="auth-divider"><span>MADE FOR MOVIE LOVERS</span></div>
+            <a class="auth-back-mobile" asp-area="Customer" asp-controller="Home" asp-action="Index">← Back to CineVerse</a>
+        </section>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const input = document.getElementById(button.dataset.passwordToggle);
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                button.textContent = show ? 'Hide' : 'Show';
+                button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            });
+        });
+
+        const photoInput = document.getElementById('profileImage');
+        photoInput?.addEventListener('change', () => {
+            const file = photoInput.files?.[0];
+            if (!file) return;
+            const preview = document.getElementById('profile-preview');
+            preview.src = URL.createObjectURL(file);
+            preview.hidden = false;
+            document.getElementById('profile-placeholder').hidden = true;
+        });
+    </script>
+}

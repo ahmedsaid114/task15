@@ -1,0 +1,68 @@
+@model LoginInputModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<section class="auth-page auth-login">
+    <div class="auth-orbit auth-orbit-one"></div>
+    <div class="auth-orbit auth-orbit-two"></div>
+    <div class="auth-shell">
+        <aside class="auth-story">
+            <a class="auth-back" asp-area="Customer" asp-controller="Home" asp-action="Index"><span>←</span> Back to CineVerse</a>
+            <div class="auth-story-copy">
+                <span class="eyebrow"><span class="live-dot"></span> YOUR SEAT IS WAITING</span>
+                <h1>Stories are better <em>together.</em></h1>
+                <p>Sign in to find your next favorite film, save your picks, and make every movie night count.</p>
+                <div class="auth-perks">
+                    <span><b>✦</b> Discover films picked for you</span>
+                    <span><b>✦</b> Keep your watchlist close</span>
+                </div>
+            </div>
+            <div class="auth-film-note"><span>NOW SHOWING</span><strong>YOUR NEXT GREAT NIGHT</strong><i>✦ &nbsp; ✦ &nbsp; ✦</i></div>
+        </aside>
+
+        <section class="auth-card" aria-labelledby="auth-title">
+            <div class="auth-card-mark">✦</div>
+            <span class="auth-kicker">WELCOME BACK</span>
+            <h2 id="auth-title">Good to see you.</h2>
+            <p class="auth-subtitle">Sign in and let the next story begin.</p>
+            @if (TempData["PasswordResetSuccess"] is string resetMessage)
+            {
+                <p class="auth-success-message">@resetMessage</p>
+            }
+
+            <form class="auth-form" asp-action="Login" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+                <label asp-for="Email">Email address</label>
+                <div class="auth-input-wrap"><span aria-hidden="true">✉</span><input asp-for="Email" type="email" placeholder="you@example.com" autocomplete="email" /></div>
+                <span asp-validation-for="Email" class="auth-validation"></span>
+
+                <div class="auth-label-row"><label asp-for="Password">Password</label><a asp-area="Customer" asp-controller="Account" asp-action="ForgotPassword">Forgot password?</a></div>
+                <div class="auth-input-wrap"><span aria-hidden="true">⌑</span><input asp-for="Password" type="password" placeholder="Enter your password" autocomplete="current-password" /><button class="password-toggle" type="button" data-password-toggle="Password" aria-label="Show password">Show</button></div>
+                <span asp-validation-for="Password" class="auth-validation"></span>
+
+                <label class="auth-check"><input asp-for="RememberMe" /><span>Keep me signed in</span></label>
+                <button class="auth-submit" type="submit">Sign in <span>↗</span></button>
+            </form>
+
+            <p class="auth-switch">New to CineVerse? <a asp-area="Customer" asp-controller="Account" asp-action="Register">Create an account</a></p>
+            <div class="auth-divider"><span>MADE FOR MOVIE LOVERS</span></div>
+            <a class="auth-back-mobile" asp-area="Customer" asp-controller="Home" asp-action="Index">← Back to CineVerse</a>
+        </section>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const input = document.getElementById(button.dataset.passwordToggle);
+                const show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                button.textContent = show ? 'Hide' : 'Show';
+                button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            });
+        });
+    </script>
+}

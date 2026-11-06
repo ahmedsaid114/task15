@@ -1,0 +1,260 @@
+﻿
+@model IEnumerable<CinemaProject.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 0;
+    int totalCategories = ViewBag.TotalCategories ?? 0;
+    string searchString = ViewBag.SearchString ?? "";
+}
+
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Categories</h2>
+            <p class="text-muted mb-0">
+                Manage and organize your movie categories.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Categories"
+           asp-action="Create"
+           class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>
+            Add New Category
+        </a>
+    </div>
+
+    <!-- Success and Error Messages -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    <!-- Filtering -->
+    <form method="get"
+          asp-area="Admin"
+          asp-controller="Categories"
+          asp-action="Index"
+          class="row g-3 mb-4">
+
+        <div class="col-md-8">
+            <label class="form-label">Search Category</label>
+
+            <input type="text"
+                   name="searchString"
+                   value="@searchString"
+                   class="form-control"
+                   placeholder="Enter category name..." />
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i>
+                Search
+            </button>
+
+            <a asp-area="Admin"
+               asp-controller="Categories"
+               asp-action="Index"
+               class="btn btn-secondary">
+                Reset
+            </a>
+        </div>
+    </form>
+
+    <!-- Total Categories -->
+    <p class="text-muted">
+        Total Categories: <strong>@totalCategories</strong>
+    </p>
+
+    <!-- Categories Table -->
+    <div class="card">
+        <div class="card-body">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th style="width: 160px;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+
+                                    <td>@item.Name</td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(item.Description)
+                                            ? "No Description"
+                                            : item.Description)
+                                    </td>
+
+                                    <td>
+                                        <div class="d-flex gap-2">
+
+                                            <a asp-area="Admin"
+                                               asp-controller="Categories"
+                                               asp-action="Edit"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-warning btn-sm">
+                                                Edit
+                                            </a>
+
+                                            <form asp-area="Admin"
+                                                  asp-controller="Categories"
+                                                  asp-action="Delete"
+                                                  asp-route-id="@item.Id"
+                                                  method="post"
+                                                  class="delete-form">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="button"
+                                                        class="btn btn-danger btn-sm delete-btn">
+                                                    Delete
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    @if (!string.IsNullOrWhiteSpace(searchString))
+                    {
+                        <span>
+                            No categories match your search.
+                        </span>
+                    }
+                    else
+                    {
+                        <span>
+                            No categories found. Click Add New Category to add one.
+                        </span>
+                    }
+                </div>
+            }
+
+            <!-- Pagination: After the table -->
+            @if (totalPages > 1)
+            {
+                <nav aria-label="Categories pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+
+                        <!-- Previous -->
+                        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link"
+                               asp-area="Admin"
+                               asp-controller="Categories"
+                               asp-action="Index"
+                               asp-route-page="@(currentPage - 1)"
+                               asp-route-searchString="@searchString">
+                                Previous
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link"
+                                   asp-area="Admin"
+                                   asp-controller="Categories"
+                                   asp-action="Index"
+                                   asp-route-page="@i"
+                                   asp-route-searchString="@searchString">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Next -->
+                        <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                            <a class="page-link"
+                               asp-area="Admin"
+                               asp-controller="Categories"
+                               asp-action="Index"
+                               asp-route-page="@(currentPage + 1)"
+                               asp-route-searchString="@searchString">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<!-- SweetAlert2 Delete Confirmation -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+            const form = this.closest(".delete-form");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+
+        });
+    });
+</script>

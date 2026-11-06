@@ -1,0 +1,229 @@
+﻿@model IEnumerable<CinemaProject.Models.Movie>
+
+@{
+    ViewData["Title"] = "Manage Movies";
+}
+
+                <form method="get"
+                      asp-area="Admin"
+                      asp-controller="Movies"
+                      asp-action="Index"
+                      class="row g-3 mb-4">
+                
+                    <div class="col-md-4">
+                        <label class="form-label">Search Movie</label>
+                        <input type="text"
+                               name="searchString"
+                               value="@ViewBag.SearchString"
+                               class="form-control"
+                               placeholder="Enter movie name..." />
+                    </div>
+                
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select name="categoryId"
+                                class="form-select"
+                                asp-items="ViewBag.Categories">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-md-3">
+                        <label class="form-label">Cinema</label>
+                        <select name="cinemaId"
+                                class="form-select"
+                                asp-items="ViewBag.Cinemas">
+                            <option value="">All Cinemas</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-md-2 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                
+                        <a asp-area="Admin"
+                           asp-controller="Movies"
+                           asp-action="Index"
+                           class="btn btn-secondary">
+                            Reset
+                        </a>
+                    </div>
+                </form>
+
+<p class="text-muted">
+    Total movies: @ViewBag.TotalMovies
+</p>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Manage Movies</h2>
+            <p class="text-muted">Add, edit and manage cinema movies.</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Movies"
+           asp-action="Create"
+           class="btn btn-primary">
+            + Add Movie
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Poster</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Cinema</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Release Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var movie in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(movie.MainImg))
+                                {
+                                    <img src="@movie.MainImg"
+                                         alt="@movie.Name"
+                                         style="width:65px;height:85px;object-fit:cover" />
+                                }
+                            </td>
+                            <td>@movie.Name</td>
+                            <td>@movie.Category?.Name</td>
+                            <td>@movie.Cinema?.Name</td>
+                            <td>@movie.Price</td>
+                            <td>
+                                @(movie.Status ? "Available" : "Unavailable")
+                            </td>
+                            <td>@movie.ReleaseDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <a asp-action="Edit"
+                                   asp-route-id="@movie.Id"
+                                   class="btn btn-sm btn-warning">
+                                    Edit
+                                </a>
+
+                                <form asp-area="Admin"
+                                     asp-controller="Movies"
+                                     asp-action="Delete"
+                                     asp-route-id="@movie.Id"
+                                     method="post"
+                                     class="delete-form d-inline">
+
+                                   @Html.AntiForgeryToken()
+
+                                   <button type="button"
+                                           class="btn btn-sm btn-danger delete-btn">
+                                       Delete
+                                   </button>
+
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (!Model.Any())
+            {
+                <p class="text-center text-muted py-3">
+                    No movies found. Add your first movie.
+                </p>
+            }
+@{
+    int currentPage = ViewBag.CurrentPage;
+    int totalPages = ViewBag.TotalPages;
+}
+
+@if (totalPages > 1)
+{
+    <nav aria-label="Movies pages">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-area="Admin"
+                   asp-controller="Movies"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage - 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-categoryId="@ViewBag.CategoryId"
+                   asp-route-cinemaId="@ViewBag.CinemaId">
+                    Previous
+                </a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-area="Admin"
+                       asp-controller="Movies"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-searchString="@ViewBag.SearchString"
+                       asp-route-categoryId="@ViewBag.CategoryId"
+                       asp-route-cinemaId="@ViewBag.CinemaId">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-area="Admin"
+                   asp-controller="Movies"
+                   asp-action="Index"
+                   asp-route-page="@(currentPage + 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-categoryId="@ViewBag.CategoryId"
+                   asp-route-cinemaId="@ViewBag.CinemaId">
+                    Next
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+}
+
+        </div>
+    </div>
+</div>
+
+
+                                       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+
+            const form = this.closest(".delete-form");
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+
+        });
+    });
+</script>
